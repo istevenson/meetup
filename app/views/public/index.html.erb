@@ -1,0 +1,41 @@
+<div id="map">
+  <script>
+  var map = L.map('map').setView([51.505, -0.09], 13);
+
+
+
+  L.tileLayer('http://{s}.tile.cloudmade.com/35d23fb733aa4266be7c5555f375d6e6/113502/256/{z}/{x}/{y}.png', {
+      attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+      maxZoom: 18
+  }).addTo(map);
+
+
+
+  // L.marker([51.5, -0.09]).addTo(map)
+  //   .bindPopup('You are here!')
+  //   .openPopup();
+
+  var marker = null;
+  $("#share_location").click(function() {
+    map.on("locationfound", function(location) {
+        if (!marker)
+            marker = L.userMarker(location.latlng, {pulsing:true}).addTo(map);
+
+        marker.setLatLng(location.latlng);
+        marker.setAccuracy(location.accuracy);
+    });
+    map.locate({
+        watch: false,
+        locate: true,
+        setView: true,
+        enableHighAccuracy: true
+    });
+  });
+
+  var testmarker = L.userMarker([51.5, -0.09], {pulsing:true, accuracy:100, smallIcon:true});
+  testmarker.addTo(map);
+
+
+  </script>
+</div>
+

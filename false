@@ -1,0 +1,2 @@
+==  AddDeviseToUsers: migrating ===============================================
+-- change_table(:users)
