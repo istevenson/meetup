@@ -1,6 +1,7 @@
 /*
  * This is a manifest file that'll be compiled into application.css, which will include all the files
  * listed below.
+
  *
  * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
  * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
@@ -10,17 +11,11 @@
  *
  *= require_self
  *= require_tree .
-//= require leaflet
-//= require leaflet.marker
-//= require style
-//= require skel-noscript
-//= require style-1000px
-//= require style-desktop
-//= require style-mobile
 */
 
 #map {
-  height: 500px
+  height: 600px;
+
 }
 
 /*.nav {

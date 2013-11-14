@@ -19,9 +19,11 @@
 	}
 
 	.container {
-		width: 1200px;
-		margin-left: auto;
-		margin-right: auto;
+		width: 95%;
+		margin-right: 2.5%;
+		margin-left: 2.5%;
+		/*margin-left: 0;
+		margin-right: auto;*/
 	}
 
 	/* Modifiers */
@@ -129,7 +131,7 @@
 			/* Half */
 
 				.row.half > * {
-					padding: 25px 0 0 25px;
+					padding: 0px 0 0 25px;
 				}
 
 				.row.half + .row.half > * {

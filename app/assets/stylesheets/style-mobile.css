@@ -41,19 +41,19 @@
 			article
 			{
 				clear: both;
-				margin: 2em 0 2em 0 !important;
+				margin: 2em 0 2em 0 ;
 			}
 
 			section > :first-child,
 			article > :first-child
 			{
-				margin-top: 0 !important;
+				margin-top: 0;
 			}
 
 			section:first-child,
 			article:first-child
 			{
-				margin-top: 0 !important;
+				margin-top: 0;
 			}
 
 		/* Images */
@@ -76,9 +76,10 @@
 
 			.button
 			{
-				letter-spacing: 2px;
+				font-family: "Source Sans Pro";
+				letter-spacing: 1px;
 				display: block;
-				padding: 1em 0 1em 0;
+				/*padding: 1em 0 1em 0;*/
 			}
 
 		/* Lists */
@@ -335,22 +336,22 @@
 			#content > section,
 			#content > article
 			{
-				margin: 4em 0 0 0 !important;
-				padding: 4em 0 0 0 !important;
+				margin: 4em 0 0 0;
+				padding: 4em 0 0 0;
 			}
 
 			#content > section:first-child,
 			#content > article:first-child
 			{
-				margin: 0 !important;
-				padding: 0 !important;
+				margin: 0;
+				padding: 0;
 			}
 
 	/*********************************************************************************/
 	/* Sidebar                                                                       */
 	/*********************************************************************************/
 
-		#sidebar
+		/*#sidebar
 		{
 			border-top: solid 2px #e5e5e5;
 			box-shadow: inset 0px 8px 0px 0px #fff, inset 0px 10px 0px 0px #e5e5e5;
@@ -371,7 +372,7 @@
 				margin: 0 !important;
 				padding: 0 !important;
 			}
-
+*/
 	/*********************************************************************************/
 	/* Copyright                                                                     */
 	/*********************************************************************************/
@@ -426,7 +427,22 @@
 			padding-right: 5px;
 		}
 
-		button {
-			margin-right: 63px;
+
+
+		#mobile_button {
+			width: 80px;
+			padding-right: 90px;
+			margin-right: 30px;
+		}
+
+		/*#share_location{
+			margin-right: 10px;
+			margin-left: 10px;
+		}*/
+
+		button#share_location.button.button-icon{
+			width: 60px;
+			margin-left: 36%;
+			margin-right: 36%;
 		}
 }
