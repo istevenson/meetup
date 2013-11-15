@@ -11,6 +11,7 @@ Meetup::Application.routes.draw do
   root :to => "public#index"
   resources :sessions
   resources :users
+  resources :spottings
 
   get '/about' => 'public#about', as: 'about'
 

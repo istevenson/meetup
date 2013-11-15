@@ -14,8 +14,10 @@
 //= require jquery_ujs
 //= require_tree .
 
+var userLocation;
 var users_name = "";
 var map;
+var marker = null;
 
 
 $(function () {
@@ -29,50 +31,170 @@ $(function () {
       maxZoom: 18
   }).addTo(map);
 
-  // $("#share_location").leanModal({top: 200, overlay: 0.4, closeButton: ".modal_close"});
-
-  // debugger;
-
-  $('#share_location').click(function() {
-    $('#overlay').fadeIn();
-  });
-
-  $('#your_name_input').keyup(function(e) {
-    var keycode = e.which;
-    if (keycode==13) {
-      e.preventDefault();
-      // debugger;
-      users_name = $('#your_name_input').val();
-      $('#overlay').fadeOut();
-      locateAndShow();
-      $.ajax({
-        type: "GET",
-        cache: false,
-        url: document.URL,
-        data: {users_name,},
-        success: function(data)
-      })
-    }
-  });
-
-
-
   var getPopupText = function (radius) {
+    var text;
     var uname;
-    if (users_name == "") {
+    if (users_name === "" && radius === undefined) {
       uname = "User";
+      text = uname + " is within a few meters from this point.";
+    } else if (radius === undefined) {
+      uname = users_name;
+      text = uname + " is within a few meters from this point.";
+    } else if (users_name === "") {
+      uname = "User";
+      text = uname + " is with " + radius + " meters from this point.";
     } else {
       uname = users_name;
+      text = uname + " is within " + radius + " meters from this point.";
     }
-    return uname + " is within " + radius + " meters from this point.";
-    // return "You are within a few meters from this point.";
+    return text; //get radius to work
   };
 
-  // var onlineUsers = {};
+  function getUserLocation(){
 
-  var idGenerator = function(){
-    return Math.floor(Math.random() * (100 - 1 + 1) + 1);
+    $('#get_location').click(function(){
+      map.on("locationfound", function(location) {
+        var radius = location.accuracy/2;
+        if (!marker)
+          marker = L.userMarker(location.latlng, {pulsing:true, accuracy:100, iconPulsingSmall:true}).addTo(map);
+
+        marker.setLatLng(location.latlng);
+        marker.setAccuracy(location.accuracy);
+        //eventually allow for users to drag their marker to a more correct location
+      });
+
+      map.locate({
+        watch: true,
+        locate: true,
+        setView: true,
+        maxZoom: 18,
+        enableHighAccuracy: true
+      });
+    });
+  }
+
+  getUserLocation();
+
+
+  function shareUserLocation(){
+    $('#share_location').click(function() {
+      $('#overlay').fadeIn();
+    });
+
+    $('#your_name_input').keyup(function(e) {
+      var keycode = e.which;
+      if (keycode==13) {
+        e.preventDefault();
+        // debugger;
+        users_name = $('#your_name_input').val();
+        $('#overlay').fadeOut();
+        showSharedLocationMarker();
+        // renderAllSharedMarkers();
+      }
+    });
+  }
+
+  shareUserLocation();
+
+
+
+  function showSharedLocationMarker(){
+      // marker = null;
+    if (!marker){
+      map.on("locationfound", function(location) {
+        var radius = location.accuracy/2;
+        // if (!marker)
+          marker = L.userMarker(location.latlng, {pulsing:true, accuracy:50, iconPulsingSmall:true}).addTo(map)
+            .bindPopup(getPopupText(radius)).openPopup();
+
+        marker.setLatLng(location.latlng);
+        // marker.setAccuracy(location.accuracy);
+        //eventually allow for users to drag their marker to a more correct location
+      });
+
+      map.locate({
+        watch: true,
+        locate: true,
+        setView: true,
+        maxZoom: 18,
+        enableHighAccuracy: true
+      });
+    } else {
+      marker.bindPopup(getPopupText()).openPopup();
+    }
+
+
+
+      // marker.setLatLng(location.latlng);
+      // marker.setAccuracy(location.accuracy);
+      // userLocation = location.latlng;
+      // writeLocationToServer(users_name,userLocation); //how to pass userLocation this function without calling it?
+  }
+
+  var renderAllSharedMarkers = function(){
+    //fire off the request to retrieve data from /spottings.json
+    $.ajax({
+      url: "/spottings.json",
+      type: "POST",
+      data: {
+        name: users_name,
+        location: userLocation,
+      },
+      success: (function(data, status, jqXHR) {
+        marker = L.userMarker(userLocation, {pulsing:true, accuracy:100, iconPulsingSmall:true}).addTo(map)
+        .bindPopup("This is the approximate location of " + users_name).openPopup();
+      })
+    });
   };
+
+
+
+  var writeLocationToServer = function(users_name, userLocation){
+    //send users_name and userLocation to /spottings.json
+    $.ajax({
+      url: "/spottings.json",
+      type: "GET",
+      cache: false,
+      data: {
+        name: users_name,
+        location: userLocation
+      },
+      success: (function(data, status, jqXHR){
+        console.log("success!");
+      })
+    });
+  };
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// var onlineUsers = {};
+
+  // var idGenerator = function(){
+  //   return Math.floor(Math.random() * (100 - 1 + 1) + 1);
+  // };
 
   // var getUserMarkers = function() {
   //   if (onlineUsers !== {}) {
@@ -81,40 +203,6 @@ $(function () {
   //     }
   //   }
   // };
-  // function locateOnArrival(location){
-  //   map.onuserLocation = location.latlng;
-  // }
-
-  function locateAndShow(){
-    // map.locate({setView: true, maxZoom: 16})
-
-    // getUserMarkers();
-
-    var marker = null;
-    // debugger;
-
-    map.on("locationfound", function(location) {
-      var radius = location.accuracy/2;
-      if (!marker)
-        marker = L.userMarker(location.latlng, {pulsing:true, accuracy:100, iconPulsingSmall:true}).addTo(map)
-          .bindPopup(getPopupText(radius)).openPopup();
-
-      marker.setLatLng(location.latlng);
-      marker.setAccuracy(location.accuracy);
-      // debugger;
-      // var randomId = idGenerator();
-      // onlineUsers[randomId] = marker;
-    });
-
-    map.locate({
-      watch: true,
-      locate: true,
-      setView: true,
-      maxZoom: 18,
-      enableHighAccuracy: true
-    });
-  }
-});
 
 // $("#share_location").click(function() {
 //     var lati =

@@ -1347,6 +1347,15 @@ button#share_location.button.button-icon{
 	color: #777;
 }
 
+button#get_location.button.button-icon{
+	width: 300px;
+	margin-left: 38%;
+	margin-right: 36%;
+	font-family: 'Source Sans Pro';
+	font-weight: 300;
+	color: #777;
+}
+
 #overlay {
  /*visibility: hidden;*/
  display:none;
