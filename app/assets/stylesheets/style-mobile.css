@@ -445,4 +445,10 @@
 			margin-left: 36%;
 			margin-right: 36%;
 		}
+
+		button#get_location.button.button-icon{
+			width: 60px;
+			margin-left: 36%;
+			margin-right: 36%;
+		}
 }
