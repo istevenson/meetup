@@ -3,7 +3,8 @@ class CreateSpottings < ActiveRecord::Migration
     change_table :spottings do |t|
       t.column :spotting_id, :integer
       t.column :user_name, :string
-      t.column :location, :string
+      t.column :lat, :float
+      t.column :lon, :float
       t.timestamps
     end
   end

@@ -10,10 +10,11 @@ Meetup::Application.routes.draw do
 
   root :to => "public#index"
   resources :sessions
-  resources :users
+  # resources :users
   resources :spottings
 
   get '/about' => 'public#about', as: 'about'
+  # get '/spottings' => "spottings#show", :format => :json
 
 
   # resources :users

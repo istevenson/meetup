@@ -18,11 +18,14 @@ var userLocation;
 var users_name = "";
 var map;
 var marker = null;
+var phone_num;
+
+
 
 
 $(function () {
 
-  map = L.map('map', {scrollWheelZoom: false, animate: true}).setView([38.00, -97.00], 4);
+  map = L.map('map', {center:[38.00, -97.00], zoom: 4, scrollWheelZoom: false, animate: true, tap: false, worldCopyJump: true});
 
   // debugger;
 
@@ -31,23 +34,67 @@ $(function () {
       maxZoom: 18
   }).addTo(map);
 
+  var renderAllSharedMarkers = function(){
+    //fire off the request to retrieve data from /spottings.json
+
+    var spotting;
+
+    for (var i = 0; i < all_spottings.length; i++){
+      spotting = all_spottings[i];
+      var location_arr = [];
+      location_arr.push(spotting["lat"]);
+      location_arr.push(spotting["lon"]);
+      location_arr.join(", ");
+      marker = L.userMarker(location_arr, {pulsing:true, accuracy:100, iconPulsingSmall: true}).addTo(map)
+        .bindPopup(spotting["users_name"] + " is here.");
+        marker.setLatLng(location_arr);
+
+      map.locate({
+        watch: false,
+        locate: false,
+        setView: false,
+        maxZoom: 18,
+        enableHighAccuracy: true
+      });
+    }
+
+  };
+  renderAllSharedMarkers();
+
+  var removeAlert = function(){
+    $('#overlay3').fadeIn(150);
+    $('#overlay3').fadeOut(150);
+  };
+
+  var domelem = '<a href="#" class="remove_link">Remove Me From Map</a>';
+
+  var removeButton = function(marker){
+    $('.remove_link').onclick = function(){
+      preventDefault();
+      marker.removeFrom(map);
+      removeAlert();
+    };
+  };
+
+
+
   var getPopupText = function (radius) {
     var text;
     var uname;
     if (users_name === "" && radius === undefined) {
       uname = "User";
-      text = uname + " is within a few meters from this point.";
+      text = uname + " is within a few meters from this point.<br>" + domelem;
     } else if (radius === undefined) {
       uname = users_name;
-      text = uname + " is within a few meters from this point.";
+      text = uname + " is within a few meters from this point.<br>" + domelem;
     } else if (users_name === "") {
       uname = "User";
-      text = uname + " is with " + radius + " meters from this point.";
+      text = uname + " is with " + radius + " meters from this point.<br>" + domelem;
     } else {
       uname = users_name;
-      text = uname + " is within " + radius + " meters from this point.";
+      text = uname + " is within " + radius + " meters from this point.<br>" + domelem;
     }
-    return text; //get radius to work
+    return text;
   };
 
   function getUserLocation(){
@@ -55,16 +102,19 @@ $(function () {
     $('#get_location').click(function(){
       map.on("locationfound", function(location) {
         var radius = location.accuracy/2;
-        if (!marker)
-          marker = L.userMarker(location.latlng, {pulsing:true, accuracy:100, iconPulsingSmall:true}).addTo(map);
+        // if (!marker)
+          marker = L.userMarker(location.latlng, {pulsing:true, accuracy:50, iconPulsingSmall:true, draggable:true, riseOnHover:true}).addTo(map);
 
         marker.setLatLng(location.latlng);
         marker.setAccuracy(location.accuracy);
+        removeButton(marker)
+        showSharedLocationMarker(marker);
+
         //eventually allow for users to drag their marker to a more correct location
       });
 
       map.locate({
-        watch: true,
+        watch: false,
         locate: true,
         setView: true,
         maxZoom: 18,
@@ -96,19 +146,29 @@ $(function () {
 
   shareUserLocation();
 
+  var idGenerator = function(){
+    return Math.floor(Math.random() * (100 - 1 + 1) + 1);
+  };
 
 
-  function showSharedLocationMarker(){
+  function showSharedLocationMarker(marker){
       // marker = null;
-    if (!marker){
+    // if (!marker){ /////////////check to see if marker was dragged
       map.on("locationfound", function(location) {
         var radius = location.accuracy/2;
         // if (!marker)
-          marker = L.userMarker(location.latlng, {pulsing:true, accuracy:50, iconPulsingSmall:true}).addTo(map)
+          marker = L.userMarker(location.latlng, {pulsing:true, accuracy:50, iconPulsingSmall:true, draggable:true, riseOnHover:true}).addTo(map)
             .bindPopup(getPopupText(radius)).openPopup();
 
         marker.setLatLng(location.latlng);
-        // marker.setAccuracy(location.accuracy);
+        marker.setAccuracy(location.accuracy);
+        point = {lat: location.latlng.lat, lon: location.latlng.lng};
+
+        if (!users_name)
+          users_name = "User" + idGenerator();
+        writeMarkerToServer(users_name, point);
+        removeMarker();
+
         //eventually allow for users to drag their marker to a more correct location
       });
 
@@ -119,51 +179,61 @@ $(function () {
         maxZoom: 18,
         enableHighAccuracy: true
       });
-    } else {
-      marker.bindPopup(getPopupText()).openPopup();
-    }
 
-
-
-      // marker.setLatLng(location.latlng);
-      // marker.setAccuracy(location.accuracy);
-      // userLocation = location.latlng;
-      // writeLocationToServer(users_name,userLocation); //how to pass userLocation this function without calling it?
   }
 
-  var renderAllSharedMarkers = function(){
-    //fire off the request to retrieve data from /spottings.json
-    $.ajax({
-      url: "/spottings.json",
-      type: "POST",
-      data: {
-        name: users_name,
-        location: userLocation,
-      },
-      success: (function(data, status, jqXHR) {
-        marker = L.userMarker(userLocation, {pulsing:true, accuracy:100, iconPulsingSmall:true}).addTo(map)
-        .bindPopup("This is the approximate location of " + users_name).openPopup();
-      })
-    });
-  };
+  // function removeMarker() {
+  //   $('.leaflet-popup-content').click(function(){
+  //     map.removeLayer(marker);
+  //   });
+  // }
 
 
 
-  var writeLocationToServer = function(users_name, userLocation){
+
+
+
+
+  var writeMarkerToServer = function(users_name, location){
     //send users_name and userLocation to /spottings.json
-    $.ajax({
-      url: "/spottings.json",
-      type: "GET",
-      cache: false,
-      data: {
-        name: users_name,
-        location: userLocation
-      },
-      success: (function(data, status, jqXHR){
-        console.log("success!");
-      })
+    $.post("/spottings", {
+      users_name: users_name,
+      lat: location.lat,
+      lon: location.lon
+    }, function(responseData){
     });
   };
+
+
+  function getPhoneNumber(){
+    $("#overlay_trigger").click(function(){
+      $('#overlay2').fadeIn();
+    });
+
+    $('#num_input').keyup(function(e) {
+      var keycode = e.which;
+      if (keycode==13) {
+        e.preventDefault();
+
+        phone_num = ('#num_input').val();
+        $('#overlay2').fadeOut();
+      }
+    });
+  }
+  getPhoneNumber();
+
+  // function rememberUserLocation(){
+  //   var remember = $.cookie('userid' { expires: 1 });
+  // }
+
+  function calcDistance(otherLatlng){
+    $("#distance").click(function(){
+      $('#distance_overlay').fadeIn();
+    });
+    //should return distance (in meters) to the given latlng
+    // var dist = distanceTo(userlocation)
+  }
+
 });
 
 

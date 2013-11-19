@@ -7,11 +7,12 @@
     <%= stylesheet_link_tag "application", media: "all" %>
     <%= javascript_include_tag "application" %>
     <%= csrf_meta_tags %>
-    <meta name="viewport" content="width=device-width initial-scale=1.0">
+    <!-- <meta name="viewport" content="width=device-width initial-scale=1.0"> -->
+    <meta name="viewport" content="width=device-width initial-scale=0.39">
     <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600|Arvo:700" rel="stylesheet" type="text/css" />
   </head>
 
-  <body class="no-sidebar">
+  <body class="no-sidebar" id="mobile">
 
     <!---flash messages require by Devise -->
     <p class="notice"><%= notice %></p>
@@ -34,9 +35,16 @@
                 <li>
                   <a href="/about" class="fa fa-info-circle"><span>About</span></a>
                 </li>
-                <li><a class="fa fa-cog" id="noshow" href="/users/sign_up"><span>Sign Up</span></a></li>
+                <li><a href="#" class="fa fa-mobile-phone" id="overlay_trigger"><span>Text It</span></a></li>
+                  <div id="overlay2">
+                    <div>Enter the number to send your location to:<br>
+                      <input name="number" placeholder="555-555-5555" type="text" class="text" id='num_input'/>
+                    </div>
+                  </div>
+
+                <!-- <li><a class="fa fa-cog" href="/users/sign_up"><span>Sign Up</span></a></li>
                 <li><a class="fa fa-retweet" href="/users/sign_in"><span>Log In</span></a></li>
-                <li><a class="fa fa-sign-out" href="/users/sign_out"><span>Log Out</span></a></li>
+                <li><a class="fa fa-sign-out" href="/users/sign_out"><span>Log Out</span></a></li> -->
               </ul>
             </nav>
         </div>
@@ -48,7 +56,7 @@
 
       <!-- Main -->
         <div id="main" class="container">
-          <div class="row">
+          <div id= "mobile_row" class="row">
 
             <!-- Content -->
               <div id="content" class="12u skel-cell-important">
@@ -59,12 +67,15 @@
                     </header>
                     <span class="image image-full"> <%= yield %></span>
                     <div id="mobile_button">
-                      <button type="button" id="get_location" class="button button-icon">Get My Location</button>
+                      <button type="button" id="get_location" class="button button-icon">See My Location</button>
                       <button type="button" id="share_location" class="button button-icon">Share My Location</button>
                       <div id="overlay">
                         <div>What name do you want others to see?<br>
                           <input name="name" placeholder="Your Name" type="text" class="text" id='your_name_input'/>
                         </div>
+                      </div>
+                      <div id="overlay3">
+                        <p>Your location has been removed from the map!<p>
                       </div>
                     </div>
                   </article>
@@ -149,6 +160,10 @@
         </div>
 
     </div>
+
+    <script>
+      var all_spottings = <%= get_all_spottings_json %>;
+    </script>
 
 </body>
 </html>

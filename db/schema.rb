@@ -11,13 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131115161955) do
+ActiveRecord::Schema.define(version: 20131118211902) do
 
   create_table "spottings", force: true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "location"
     t.string   "users_name"
+    t.string   "lat"
+    t.string   "lon"
   end
 
   create_table "users", force: true do |t|
