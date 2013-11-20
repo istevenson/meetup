@@ -35,10 +35,10 @@
                 <li>
                   <a href="/about" class="fa fa-info-circle"><span>About</span></a>
                 </li>
-                <li><a href="#" class="fa fa-mobile-phone" id="overlay_trigger"><span>Text It</span></a></li>
+                <li><a href="#" class="fa fa-mobile-phone" id="overlay_trigger"><span>Get Link</span></a></li>
                   <div id="overlay2">
-                    <div>Enter the number to send your location to:<br>
-                      <input name="number" placeholder="555-555-5555" type="text" class="text" id='num_input'/>
+                    <div>
+                      <p>The link has been copied!</p>
                     </div>
                   </div>
 
@@ -65,19 +65,7 @@
                   <article class="is-post">
                     <header>
                     </header>
-                    <span class="image image-full"> <%= yield %></span>
-                    <div id="mobile_button">
-                      <button type="button" id="get_location" class="button button-icon">See My Location</button>
-                      <button type="button" id="share_location" class="button button-icon">Share My Location</button>
-                      <div id="overlay">
-                        <div>What name do you want others to see?<br>
-                          <input name="name" placeholder="Your Name" type="text" class="text" id='your_name_input'/>
-                        </div>
-                      </div>
-                      <div id="overlay3">
-                        <p>Your location has been removed from the map!<p>
-                      </div>
-                    </div>
+                    <%= yield %>
                   </article>
 
               </div>

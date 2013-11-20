@@ -205,22 +205,13 @@ $(function () {
   };
 
 
-  function getPhoneNumber(){
+  function getLink(){
     $("#overlay_trigger").click(function(){
-      $('#overlay2').fadeIn();
-    });
-
-    $('#num_input').keyup(function(e) {
-      var keycode = e.which;
-      if (keycode==13) {
-        e.preventDefault();
-
-        phone_num = ('#num_input').val();
-        $('#overlay2').fadeOut();
-      }
+      $('#overlay2').fadeIn(600);
+      $('#overlay2').fadeOut(600);
     });
   }
-  getPhoneNumber();
+  getLink();
 
   // function rememberUserLocation(){
   //   var remember = $.cookie('userid' { expires: 1 });
