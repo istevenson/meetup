@@ -1,10 +1,9 @@
 class CreateSpottings < ActiveRecord::Migration
   def change
     create_table :spottings do |t|
-      t.column :spotting_id, :integer
-      t.column :user_name, :string
-      t.column :lat, :float
-      t.column :lon, :float
+      t.column :users_name, :string
+      t.column :lat, :string
+      t.column :lon, :string
       t.timestamps
     end
   end
