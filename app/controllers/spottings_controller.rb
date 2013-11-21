@@ -38,4 +38,8 @@ class SpottingsController < ApplicationController
     end
   end
 
+  def destroy
+    @spotting.destroy if @spotting.updated_at > 10.hour.ago
+  end
+
 end

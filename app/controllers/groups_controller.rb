@@ -27,4 +27,7 @@ class GroupsController < ApplicationController
       end
     end
   end
+
+  def delete
+  end
 end
