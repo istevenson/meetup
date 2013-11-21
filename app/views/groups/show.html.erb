@@ -1,0 +1,28 @@
+<%# @group.spottings %>
+
+
+
+<span class="image image-full">
+  <div id="map">
+  </div>
+</span>
+<div id="mobile_button">
+  <button type="button" id="get_location" class="button button-icon">See My Location</button>
+  <button type="button" id="share_location" class="button button-icon">Share My Location</button>
+  <div id="overlay">
+    <div>What name do you want your group to see?<br>
+      <input name="name" placeholder="Your Name" type="text" class="text" id='your_name_input'/>
+    </div>
+  </div>
+  <div id="overlay3">
+    <p id="distance"><p>
+  </div>
+</div>
+
+<script>
+  <% if @group %>
+    var group_id = <%= @group.id %>
+  <% end %>
+  var my_group_spottings = <%= get_my_group_spottings %>;
+</script>
+

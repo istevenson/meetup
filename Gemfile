@@ -2,13 +2,13 @@ source 'https://rubygems.org'
 
 #Using devise
 gem 'devise'
-
+gem "faker"
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.0'
 
 # Use sqlite3 as the database for Active Record
 
-
+gem "quiet_assets"
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
 

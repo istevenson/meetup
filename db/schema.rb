@@ -11,7 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131118211902) do
+ActiveRecord::Schema.define(version: 20131120200828) do
+
+  create_table "groups", force: true do |t|
+    t.string   "secret_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "spottings", force: true do |t|
     t.datetime "created_at"
@@ -19,7 +25,10 @@ ActiveRecord::Schema.define(version: 20131118211902) do
     t.string   "users_name"
     t.string   "lat"
     t.string   "lon"
+    t.integer  "group_id"
   end
+
+  add_index "spottings", ["group_id"], name: "index_spottings_on_group_id"
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false

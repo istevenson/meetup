@@ -437,4 +437,10 @@
     margin-left:  0px;
   }
 
+  /*.circle_image {
+    -webkit-border-radius: 50em;
+    -mox-border-radius: 50em;
+    border-radius: 50em;
+  }*/
+
 }

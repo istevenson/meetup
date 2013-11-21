@@ -1416,7 +1416,7 @@
 	 width:100%;
 	 height:100%;
 	 text-align:center;
-	 z-index: 1000;
+	 /*z-index: 1000;*/
 	}
 
 	#overlay2 p {
@@ -1441,7 +1441,7 @@
 	 width:100%;
 	 height:100%;
 	 text-align:center;
-	 z-index: 1001;
+	/* z-index: 1001;*/
 	}
 
 	#overlay3 p {
@@ -1453,4 +1453,8 @@
 	div#about{
 		margin: 3px 67px -30px 67px;
 	}
+
+	/*#link {
+
+	}*/
 

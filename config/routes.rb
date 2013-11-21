@@ -1,5 +1,5 @@
 Meetup::Application.routes.draw do
-  devise_for :users
+  # devise_for :users
   # devise_for :users, :path => "auth", :path_names => { :sign_in => 'login', :sign_out => 'logout', :password => 'secret', :confirmation => 'verification', :unlock => 'unblock', :registration => 'register', :sign_up => 'cmon_let_me_in' }
 
   # The priority is based upon order of creation: first created -> highest priority.
@@ -9,14 +9,22 @@ Meetup::Application.routes.draw do
   # root 'welcome#index'
 
   root :to => "public#index"
-  resources :sessions
+  # resources :sessions
   # resources :users
-  resources :spottings
+  # get '/spottings' => 'spottings#index'
+  get '/spottings' => 'spottings#create'
+  post '/spottings' => 'spottings#create'
+  get '/spottings' => 'spottings#new'
+
+  get '/meetup/:secret_id' => 'groups#show'
+  post '/meetup/:secret_id' => 'groups#update'
 
   get '/about' => 'public#about', as: 'about'
   # get '/spottings' => "spottings#show", :format => :json
 
-
+  if Rails.env.production?
+   get '404', :to => 'public#index'
+  end
   # resources :users
 
   # root '#index'

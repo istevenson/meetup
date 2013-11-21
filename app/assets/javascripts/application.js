@@ -19,13 +19,16 @@ var users_name = "";
 var map;
 var marker = null;
 var phone_num;
-
+var groupId;
+var location_arr;
 
 
 
 $(function () {
 
-  map = L.map('map', {center:[38.00, -97.00], zoom: 4, scrollWheelZoom: false, animate: true, tap: false, worldCopyJump: true});
+
+
+  map = L.map('map', {center:[38.00, -97.00], zoom: 4, scrollWheelZoom: false, animate: true, tap: false});
 
   // debugger;
 
@@ -39,27 +42,33 @@ $(function () {
 
     var spotting;
 
-    for (var i = 0; i < all_spottings.length; i++){
-      spotting = all_spottings[i];
-      var location_arr = [];
-      location_arr.push(spotting["lat"]);
-      location_arr.push(spotting["lon"]);
-      location_arr.join(", ");
-      marker = L.userMarker(location_arr, {pulsing:true, accuracy:100, iconPulsingSmall: true}).addTo(map)
-        .bindPopup(spotting["users_name"] + " is here.");
-        marker.setLatLng(location_arr);
+    if (typeof my_group_spottings !== "undefined"){
+      for (var i = 0; i < my_group_spottings.length; i++){
+        spotting = my_group_spottings[i];
+        location_arr = [];
+        location_arr.push(spotting["lat"]);
+        location_arr.push(spotting["lon"]);
+        location_arr.join(", ");
+        marker = L.userMarker(location_arr, {pulsing:true, accuracy:100, iconPulsingSmall: true}).addTo(map)
+          .bindPopup(spotting["users_name"] + " is here.");
+          marker.setLatLng(location_arr);
 
-      map.locate({
-        watch: false,
-        locate: false,
-        setView: false,
-        maxZoom: 18,
-        enableHighAccuracy: true
-      });
+
+
+        map.locate({
+          watch: false,
+          locate: false,
+          setView: false,
+          maxZoom: 18,
+          enableHighAccuracy: true
+        });
+      }
     }
-
   };
+
   renderAllSharedMarkers();
+
+
 
   var removeAlert = function(){
     $('#overlay3').fadeIn(150);
@@ -69,11 +78,12 @@ $(function () {
   var domelem = '<a href="#" class="remove_link">Remove Me From Map</a>';
 
   var removeButton = function(marker){
-    $('.remove_link').onclick = function(){
-      preventDefault();
+    $('.remove_link').bind("click", function(){
+      // preventDefault();
+
       marker.removeFrom(map);
       removeAlert();
-    };
+    });
   };
 
 
@@ -107,8 +117,8 @@ $(function () {
 
         marker.setLatLng(location.latlng);
         marker.setAccuracy(location.accuracy);
-        removeButton(marker)
-        showSharedLocationMarker(marker);
+        // removeButton(marker);
+        // showSharedLocationMarker(marker);
 
         //eventually allow for users to drag their marker to a more correct location
       });
@@ -129,6 +139,7 @@ $(function () {
   function shareUserLocation(){
     $('#share_location').click(function() {
       $('#overlay').fadeIn();
+      window.scrollTo(0,420);
     });
 
     $('#your_name_input').keyup(function(e) {
@@ -151,7 +162,7 @@ $(function () {
   };
 
 
-  function showSharedLocationMarker(marker){
+  function showSharedLocationMarker(marker, groupId){
       // marker = null;
     // if (!marker){ /////////////check to see if marker was dragged
       map.on("locationfound", function(location) {
@@ -164,10 +175,26 @@ $(function () {
         marker.setAccuracy(location.accuracy);
         point = {lat: location.latlng.lat, lon: location.latlng.lng};
 
+        // distanceTo(point);
+
+        if (typeof my_group_spottings != "undefined" && my_group_spottings.length > 0){
+          spotting = my_group_spottings[0];
+          groupId = spotting["group_id"];
+        }
+
+        // debugger;
+        var url = window.location.href;
+        var secretIdCheck = url.substr(url.lastIndexOf('/') + 1);
         if (!users_name)
           users_name = "User" + idGenerator();
-        writeMarkerToServer(users_name, point);
-        removeMarker();
+        if (secretIdCheck !== null && secretIdCheck !== ""){
+          writeMarkerToGroup(users_name, point, groupId);
+        }
+        else{
+          writeMarkerToServer(users_name, point);
+        }
+
+        // removeMarker();
 
         //eventually allow for users to drag their marker to a more correct location
       });
@@ -182,14 +209,16 @@ $(function () {
 
   }
 
-  // function removeMarker() {
-  //   $('.leaflet-popup-content').click(function(){
-  //     map.removeLayer(marker);
-  //   });
-  // }
 
-
-
+  var writeMarkerToGroup = function(users_name, location, groupId){
+    $.post("/spottings", { //comeback
+      users_name: users_name,
+      lat: location.lat,
+      lon: location.lon,
+      group_id: groupId
+    }, function(responseData){
+    });
+  };
 
 
 
@@ -201,24 +230,31 @@ $(function () {
       lat: location.lat,
       lon: location.lon
     }, function(responseData){
+      if (typeof responseData.new_group_id != "undefined"){
+        window.location = window.location.href+"meetup/"+responseData.new_group_id;
+      }
     });
   };
 
 
-  function getLink(){
-    $("#overlay_trigger").click(function(){
-      $('#overlay2').fadeIn(600);
-      $('#overlay2').fadeOut(600);
+  function showLink(){
+    $('#overlay_trigger').click(function(){
+      var elem = document.getElementById('url_link');
+      elem.value = window.location.href;
+
+      $('#overlay2').fadeIn(600).delay(10000).fadeOut();
+      elem.select();
     });
   }
-  getLink();
 
-  // function rememberUserLocation(){
-  //   var remember = $.cookie('userid' { expires: 1 });
-  // }
+
+  showLink();
 
   function calcDistance(otherLatlng){
-    $("#distance").click(function(){
+    var elem = document.getElementsByClassName('leaflet-marker-icon');
+    var meters = point.distanceTo(otherLatlng);
+    elem.value = "You are " + meters + " away from this user.";
+    $(this).click(function(){
       $('#distance_overlay').fadeIn();
     });
     //should return distance (in meters) to the given latlng
