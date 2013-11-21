@@ -16,8 +16,8 @@ Meetup::Application.routes.draw do
   post '/spottings' => 'spottings#create'
   get '/spottings' => 'spottings#new'
 
-  get '/meetup/:secret_id' => 'groups#show'
-  post '/meetup/:secret_id' => 'groups#update'
+  get '/find/:secret_id' => 'groups#show'
+  post '/find/:secret_id' => 'groups#update'
 
   get '/about' => 'public#about', as: 'about'
   # get '/spottings' => "spottings#show", :format => :json

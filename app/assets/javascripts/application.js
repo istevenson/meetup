@@ -231,7 +231,7 @@ $(function () {
       lon: location.lon
     }, function(responseData){
       if (typeof responseData.new_group_id != "undefined"){
-        window.location = window.location.href+"meetup/"+responseData.new_group_id;
+        window.location = window.location.href+"find/"+responseData.new_group_id;
       }
     });
   };
