@@ -21,19 +21,38 @@ var marker = null;
 var phone_num;
 var groupId;
 var location_arr;
+var mapboxTiles;
 
 
 
 $(function () {
 
+  // L.mapbox.accessToken = 'pk.eyJ1IjoiaXN0ZXZlbnNvbiIsImEiOiJnWXpMV3cwIn0.RZu-to2CoDBGHT5AegCzRw';
+
+  // map = L.map('map', {center:[38.00, -97.00], zoom: 4, scrollWheelZoom: false, animate: true, tap: false})
+  //   // .addLayer(mapboxTiles)
+  //   .setView([42.3610, -71.0587], 15);
 
 
-  map = L.map('map', {center:[38.00, -97.00], zoom: 4, scrollWheelZoom: false, animate: true, tap: false});
+  map = L.map('map', {center:[38.8833, -83.0167], zoom: 4, scrollWheelZoom: false, animate: true, tap: false});
+
+
+  // mapboxTiles = L.tileLayer('https://{s}.tiles.mapbox.com/v3/istevenson.l17h8agb/{z}/{x}/{y}.png', {
+  //     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+  //     maxZoom: 18
+  // }).addTo(map);
+
+  // L.tileLayer('http://{s}.tiles.mapbox.com/v3/istevenson.l17h8agb/{z}/{x}/{y}.png', {
+  //     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+  //     maxZoom: 18
+  // }).addTo(map);
+
+
 
   // debugger;
 
-  L.tileLayer('http://{s}.tile.cloudmade.com/35d23fb733aa4266be7c5555f375d6e6/113502/256/{z}/{x}/{y}.png', {
-      attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+  L.tileLayer('http://api.tiles.mapbox.com/v4/istevenson.l17h8agb/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiaXN0ZXZlbnNvbiIsImEiOiJnWXpMV3cwIn0.RZu-to2CoDBGHT5AegCzRw', {
+      attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
       maxZoom: 18
   }).addTo(map);
 
